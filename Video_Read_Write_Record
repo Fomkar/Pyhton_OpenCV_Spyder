@@ -1,0 +1,86 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul  2 09:39:06 2021
+
+@author: Ömer Karagöz
+"""
+
+import cv2
+
+cam = cv2.VideoCapture(0)
+
+fourrc = cv2.VideoWriter_fourcc(*'XVID')
+
+out= cv2.VideoWriter("deneme1.avi",fourrc,30.0,(640,480))
+
+while cam.isOpened() :
+    ret,frame = cam.read()
+    
+    if not ret:
+        print ("kameradan görüntü alınmadı")
+        break
+    
+    out.write(frame)
+    cv2.imshow("kamera",frame)
+    
+    if cv2.waitKey(1)==27:
+        print("videodan ayrıldınız")
+        break
+    
+cam.release()
+out.release()
+cv2.destroyAllWindows()
+
+
+
+
+cam = cv2.VideoCapture("cilek.mp4")
+
+while cam.isOpened():
+    ret,frame =cam.read()
+    cv2.waitKey(30)
+    
+    if not ret:
+        print("Video acılmadı")
+        break
+    cv2.imshow("video",frame)
+    
+    if cv2.waitKey(1)==27:
+        print ("video kapatıldı")
+        break
+cam.release()
+cv2.destroyAllWindows()
+
+#import numpy as np
+
+cam = cv2.VideoCapture(0)
+
+print(cam.get(3))
+print(cam.get(4))
+
+cam.set(3,320)
+cam.set(4,240)
+cam.set(cv2.CAP_PROP_GAIN,1)
+
+
+if not cam.isOpened():
+    print("kamerayı tanımadı")
+    exit()
+
+while True :
+    ret, frame = cam.read()
+    
+    frame =cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+    frame = cv2.flip(frame,1)
+    if not ret:
+        print("Kameradan görüntü okunamıyor")
+        
+    cv2.imshow("kamera",frame)    
+    
+    if cv2.waitKey(10) == 27:
+        print("görüntü sonlandırıldı.")
+        break
+        
+cam.release()
+           
+cv2.destroyAllWindows()
