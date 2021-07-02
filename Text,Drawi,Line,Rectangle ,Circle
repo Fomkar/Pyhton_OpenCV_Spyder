@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul  2 11:05:07 2021
+
+@author: Ömer Karagöz
+"""
+
+import cv2
+import numpy as np
+
+img = np.zeros((700,700,3),np.uint8)
+
+#çizgi çizme
+# cv2.line(img,(0,0),(511,511),(25,100,50),3,cv2.FONT_HERSHEY_DUPLEX)
+# cv2.line(img,(0,511),(511,0),(25,10,150),3,cv2.FONT_HERSHEY_DUPLEX)
+
+
+#Dikdörtgen
+# cv2.rectangle(img, (10,10), (350,350), (0,0,255),2,cv2.FONT_HERSHEY_SIMPLEX)
+# cv2.rectangle(img,(350,350),(511,511),(0,255,0),-1)
+
+#Daire veya çember çizme
+# cv2.circle(img,(250,250), 150, (150,15,0),3)
+# cv2.circle(img,(250,250), 100, (150,150,150),3)
+# cv2.circle(img,(250,250), 60, (150,150,150),-1)
+
+# #Ellipse çizme
+# cv2.ellipse(img, (200,200), (100,50), 90,0,180,(25,25,178),3)
+# cv2.ellipse(img, (200,200), (100,50), 90,150,180,(25,25,178),-1)
+
+
+# #Çokgen çizme
+# pts = np.array([[20,30],[100,120],[255,255],[10,400]],np.int32)#4 tane nokta oluşturduk
+# pts2=pts.reshape(-1,1,2)
+# cv2.polylines(img, [pts], True, (255,255,255),4)#true diyerek onları birleştirdim
+
+cv2.putText(img,"Omer Karagoz",(10,200),cv2.FONT_HERSHEY_PLAIN,4, (10,50,200),3,cv2.LINE_AA)
+cv2.putText(img,"Embedded and Software Engineer",(10,250),cv2.FONT_HERSHEY_PLAIN,2,(10,50,200),1,cv2.LINE_AA)
+cv2.putText(img, "OpenCV" ,(10,400) ,cv2.FONT_HERSHEY_DUPLEX, 4, (255,200,150), 2, cv2.LINE_AA)
+
+
+
+
+
+cv2.imshow("resim", img)
+cv2.waitKey(0)
+cv2.imwrite("Opencv_Omer1.jpg", img)
+
+cv2.destroyAllWindows()
