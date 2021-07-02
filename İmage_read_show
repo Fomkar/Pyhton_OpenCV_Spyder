@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul  2 08:44:35 2021
+
+@author: Ömer Karagöz
+"""
+
+import cv2
+from matplotlib import pyplot as plt
+
+
+resim = cv2.imread("resim1.jpg",0)
+
+cv2.namedWindow("resim penceresi",cv2.WINDOW_NORMAL)
+
+cv2.imshow("resim penceresi",resim)
+
+plt.imshow(resim)
+plt.show()
+
+k = cv2.waitKey(0)
+
+if k == 27: 
+    print("Esc basıldı")
+elif k== ord("q"):
+        print("q tuşuna basldı , resim kayıt edildi")
+        cv2.imwrite("horsegray_scale.bmp",resim)
+cv2.destroyAllWindows()
