@@ -1,0 +1,64 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul  2 15:14:23 2021
+
+@author: Ömer Karagöz
+"""
+
+import cv2
+import numpy as np
+
+cizim = False;
+mod = 0
+xi,yi=-1,-1
+
+def draw(event, x, y, flags, param):
+    global cizim
+    global xi,yi
+    if event == cv2.EVENT_LBUTTONDOWN:
+        xi,yi=x,y
+        cizim = True
+        
+    
+    elif event == cv2.EVENT_MOUSEMOVE:
+        if cizim == True:
+            if mod==True:
+                cv2.circle(img,(x,y),2,(100,50,0),-1)
+            else:
+                cv2.rectangle(img, (xi,yi), (x,y), (0,0,155),-1)
+           #♦ cv2.circle(img,(xi,yi),10,(100,50,0),2)
+        else:
+            pass
+        
+    elif event == cv2.EVENT_LBUTTONUP:
+        cizim = False
+        pass
+    # a = (x,y)
+    # if event == cv2.EVENT_LBUTTONUP:
+    #     cv2.circle(img, a,20, (25,5,255),3)
+    #     cv2.putText(img, "({},{})".format(x, y), (x,y), cv2.FONT_HERSHEY_DUPLEX,2,(0,0,255),1)
+    
+    # print("( x:{},y:{} )".format(x, y))
+    # pass
+
+
+    
+
+# for i in dir(cv2):
+#     if 'EVENT' in i:
+#         print(i)
+        
+img = np.ones((700,700,3),np.uint8)
+
+cv2.namedWindow("paint")
+cv2.setMouseCallback("paint", draw)
+cv2.waitKey(500)
+while(1):
+    cv2.imshow("paint",img)
+    if cv2.waitKey(1)==27:
+        print("program sonlandırıldı")
+        break
+    if cv2.waitKey(1)== ord("m"):
+        mod = not mod
+        
+cv2.destroyAllWindows()
