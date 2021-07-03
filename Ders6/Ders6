@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jul  3 10:27:16 2021
+
+@author: Ömer Karagöz
+"""
+
+import cv2
+import matplotlib.pyplot as plt
+
+
+resim = cv2.imread("resim.jpg")
+
+cv2.imshow("resim",resim)
+
+kirp = resim[36:380,185:435]
+
+# cv2.imshow("resim1",kirp)
+plt.subplot(121)
+plt.imshow(resim)
+plt.subplot(122)
+plt.imshow(kirp)
+plt.show()
+
