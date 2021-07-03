@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jul  3 11:53:39 2021
+
+@author: Ömer Karagöz
+"""
+
+import cv2
+from PIL import Image
+import os
+import PIL
+import glob
+import numpy as np
+
+# x = np.uint8([250])
+# y = np.uint8([10])
+
+# sonuc1=x+y #250+10=260%8
+
+# sonuc2 = cv2.add(x,y)
+
+img1=cv2.imread("image.jpg")
+img2=cv2.imread("resim2.jpg")
+img1 =cv2.resize(img1,(700,700))
+x,y,z= img2.shape
+a,b,c=img1.shape
+roi = img1[0:y,0:x] 
+
+img2_gray=cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+
+ret,mask =cv2.threshold(img2_gray,50,255, cv2.THRESH_BINARY)
+
+mask_inv =cv2.bitwise_not(mask)
+
+#img1_bg = cv2.bitwise_and(roi,roi,mask=mask_inv)
+
+
+cv2.imshow("kirp", roi)
+
+cv2.imshow("resim1",img1)
+cv2.namedWindow("Maske",cv2.WINDOW_NORMAL)
+cv2.imshow("Maske", mask)
+cv2.imshow("Maske invert",mask_inv)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+    
