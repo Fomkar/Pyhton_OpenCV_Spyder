@@ -47,6 +47,9 @@ for i in images:
     print( M )
     if M['m00']== 0:
         M['m00'] = 1
+    if cv2.waitKey(0) == ord("k"):
+        cv2.destroyAllWindows() 
+        break
     else:
         cx = int(M['m10']/M['m00'])
         cy = int(M['m01']/M['m00'])
@@ -60,7 +63,14 @@ for i in images:
         crop = image[y:y+h,x:x+w]
         cv2.imshow("crop_image", crop)
         # cv2.imshow("Face", face)
-        
+        rect = cv2.minAreaRect(cnt)
+        box = cv2.boxPoints(rect)
+        box = np.int0(box)
+        cv2.drawContours(image,[box],0,(255,0,0),2)
         cv2.imshow('Contours', image) 
-        cv2.waitKey(0) 
-        cv2.destroyAllWindows() 
+        (x,y),radius = cv2.minEnclosingCircle(cnt)
+        center = (int(x),int(y))
+        radius = int(radius)
+        cv2.circle(image,center,radius,(0,0,255),2)
+        cv2.imshow('Circle', image)       
+
