@@ -1,0 +1,33 @@
+"""
+Created on Wed Dec 15 15:03:37 2021
+
+@author: Gitek_Micro
+"""
+import cv2
+
+image = cv2.imread("WhatsApp Image 2021-12-15 at 14.53.05.jpeg",1)
+#orijinal görüntü
+#cv2.imshow('Original image',image)
+#cv2.waitKey(0)
+
+gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+_,trehsold = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY)
+contours, hierarchy = cv2.findContours(trehsold,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)[-2:]
+cnt = contours[0]
+area = cv2.contourArea(cnt)
+idx =0 
+for cnt in contours:
+    area = cv2.contourArea(cnt)
+    print(area)
+    if(area > 5000):
+        idx += 1
+        x,y,w,h = cv2.boundingRect(cnt)
+        roi=image[y:y+h,x:x+w]
+        cv2.imwrite(str(idx) + '.jpg', roi)
+        cv2.rectangle(image,(x,y),(x+w,y+h),(200,0,0),2)
+        cv2.imshow('img bounding',image)
+    
+  
+
+cv2.waitKey(0)  
+cv2.destroyAllWindows()
