@@ -1,0 +1,124 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov 30 11:32:10 2022
+
+@author: Fomkar
+"""
+
+import cv2 # Burada kütüphane yükleme
+import numpy as np
+import os
+
+
+
+def get_new(old):
+    new = np.ones(old.shape, np.uint8)
+    cv2.bitwise_not(new,new)
+    return new
+
+#START
+def detectRedBorder(img):
+    orig = cv2.imread(img,1)
+    baseImg = orig
+    orig = cv2.GaussianBlur(orig,(15,15),cv2.BORDER_DEFAULT)
+    # orig = cv2.medianBlur(orig,(7))
+    
+
+    result = orig.copy()
+    orig = cv2.cvtColor(orig, cv2.COLOR_BGR2HSV)
+    lower = np.array([30,25,0])
+    upper = np.array([179,255,255])
+    mask = cv2.inRange(orig, lower, upper)
+    
+    result = cv2.bitwise_and(result, result, mask=mask)
+
+    print("baseImg:")
+    cv2.namedWindow("BaseImg",cv2.WINDOW_NORMAL)
+    cv2.imshow("BaseImg",baseImg)
+    print("mask:")
+    cv2.namedWindow("Mask",cv2.WINDOW_NORMAL)
+    cv2.imshow("Mask",mask)
+    # rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)	
+    # gray = cv2.cvtColor(rgb, cv2.COLOR_BGR2GRAY)
+    # cv2.imwrite( r"C:\Users\AKTS\Desktop\Alexnet_apple\1_gunlu_super_chief\Train\curuk\\Mask"+ '.jpg', mask)
+    print("result:")
+    # cv2.namedWindow("Gray mask",cv2.WINDOW_NORMAL)
+    # cv2.imshow("Gray mask",gray)
+    cv2.namedWindow("Result",cv2.WINDOW_NORMAL)
+    cv2.imshow("Result",result)
+    cv2.waitKey(0)
+
+
+    cv2.destroyAllWindows()
+    return mask,baseImg
+# a,b=detectRedBorder(r"C:\Users\AKTS\Desktop\Alexnet_apple\1_gunlu_super_chief\Train\curuk\\0_Image__2022-11-15__11-42-30.bmp")
+#%%
+currentDir = r"C:\Users\AKTS\Desktop\Alexnet_apple\1_gunlu_super_chief\Train\curuk"
+save_path = r"C:\Users\AKTS\Desktop\Alexnet_apple\1_gunlu_super_chief\Train\curuk\Crop\\"
+files = os.chdir(currentDir)
+files = os.listdir() 
+a = 0
+for f in files:
+    if f.endswith(".bmp"):
+        print(f)
+        a+=1
+        # x = f.split("_")
+        # # print(x[7])
+        # y  = x[7].split(".")
+        # # print(y)
+        # # print(y[0])
+        # a = int(y[0])
+
+        
+
+        # cv2.namedWindow('Gray image',cv2.WINDOW_NORMAL)
+        # cv2.imshow('Gray image',gray)
+        
+        gray_im,image = detectRedBorder(f)
+
+        _,trehsold = cv2.threshold(gray_im, 60, 255, cv2.THRESH_BINARY_INV)
+        # cv2.imwrite('treshold.jpg', trehsold)
+        dilate = cv2.dilate(trehsold, (3,3),iterations = 15)
+        dilate = cv2.bitwise_not(dilate)
+        cv2.namedWindow('Thresh image',cv2.WINDOW_NORMAL)
+        cv2.imshow('Thresh image',trehsold)
+        cv2.namedWindow('Dilate image',cv2.WINDOW_NORMAL)
+        cv2.imshow('Dilate image',dilate)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+        # if a == 1:
+        #     break
+
+        contours, hierarchy = cv2.findContours(dilate,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)[-2:]
+#       cnt = contours[0]
+        k_bosluk = 30
+        idx =0 
+        for cnt in contours:
+            area = cv2.contourArea(cnt)
+            x,y,w,h = cv2.boundingRect(cnt)
+            print(area)
+            # print("X0 : " ,x, "Y0 : ",y,"\nX1: ",x+w," Y1 : ",y+h)
+            if(area >10000 and (y+h) != image.shape[0] and y > 10 and x > 0):
+                idx += 1
+                print("X0 : " ,x, "Y0 : ",y,"\nX1: ",x+w," Y1 : ",y+h)
+                
+                roi=image[y-k_bosluk:y+h+k_bosluk,x-k_bosluk:x+w+k_bosluk]
+                cv2.imwrite(save_path + str(a) + str(idx) + '.jpg', roi)
+                
+            elif(y<30 or (y + h) ==1024):
+                pass
+                    # roi=image[y:y+h + 20,x-k_bosluk:x+w+k_bosluk]
+                    # print("yukarı ya veya aşağı değdi")
+                    #cv2.imshow('img crop'+str(a)+str(idx),roi)
+                    #cv2.rectangle(image,(x,y),(x+w,y+h),(255,250,255),1)
+                    # cv2.imwrite('Kesik_elma/elma_kesik' + "_"+ str(idx)+".jpg", roi)
+                  
+                    #cv2.imshow('img bounding',image)
+            else:
+                pass
+                # print("Kenara Değmedi"+str(idx))
+                    
+print("Kesme Bitti toplam : "+str(idx))
+cv2.waitKey(0)  
+cv2.destroyAllWindows()
