@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul 22 09:52:48 2022
+
+@author: Ömer Karagöz
+"""
+import os
+import cv2
+
+
+a = []    
+currentDir = os.getcwd()
+print(currentDir)
+os.chdir(currentDir)
+files = os.listdir()
+for i,f in enumerate(files):
+    if f.endswith(".bmp"):
+        #os.rename(f,str(i) + ".bmp")
+        print(f,"{}".format(i+1))
+        image = cv2.imread(f,1)
+        cv2.imshow("original image", image)
+        # cv2.waitKey(0)
+        grayim = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        cv2.imshow("Gray image", grayim)
+#%%    
+        cv2.imwrite("ilk_image.jpg", grayim) 
+        cv2.waitKey(0)
+
+        satir = grayim.shape[0]
+        sutun = grayim.shape[1]
+        # print(grayim[0,0]) # pixel değerlerine ulaşmak için
+        # print(grayim.shape[0]) # görüntünün boyutları
+        for i in range(satir):
+            for j in range(sutun):
+                print("satir : "+str(i)+" sutun : "+str(j)+" degeri :" + str(grayim[i][j]))
+                if(grayim[i][j] < 11):
+                    grayim[i][j] = 0
+                else:
+                    pass
+                                
+    else:
+        print("Dosya bulunamdı veya Hepsi okundu..")
+cv2.imshow("Gray image", grayim)
+cv2.waitKey(0)
+cv2.imwrite("son_image.jpg", grayim) 
+cv2.destroyAllWindows()
